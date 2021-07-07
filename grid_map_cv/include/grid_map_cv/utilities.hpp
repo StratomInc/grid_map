@@ -8,7 +8,6 @@
 
 namespace grid_map
 {
-
 /*!
  * This is class is meant as a replacement for the filters::FilterBase<T>::getParam method.
  * This class offer declaring and reading paramters.
@@ -24,11 +23,11 @@ public:
    * @param param_prefix The parameter prefix.
    * @param params_interface The node parameters interface to use.
    */
-  ParameterReader(
-    std::string param_prefix,
-    rclcpp::node_interfaces::NodeParametersInterface::SharedPtr params_interface)
-  : param_prefix_(param_prefix),
-    params_interface_(params_interface) {}
+  ParameterReader(std::string param_prefix,
+                  rclcpp::node_interfaces::NodeParametersInterface::SharedPtr params_interface)
+    : param_prefix_(param_prefix), params_interface_(params_interface)
+  {
+  }
 
   /*!
    * Retrives parameter value when defined by user.
@@ -37,17 +36,19 @@ public:
    * @param param_type The excpected type of the parameter.
    * @return - true if a parameter defined by the user is found.
    */
-  template<typename T>
-  bool get_template(const std::string & name, T & value_out, rclcpp::ParameterType param_type)
+  template <typename T>
+  bool get_template(const std::string& name, T& value_out, rclcpp::ParameterType param_type)
   {
     rclcpp::Parameter param;
 
-    params_interface_->declare_parameter(param_prefix_ + name, rclcpp::ParameterValue());
     params_interface_->get_parameter(param_prefix_ + name, param);
 
-    if (param.get_type() != param_type) {
+    if (param.get_type() != param_type)
+    {
       return false;
-    } else {
+    }
+    else
+    {
       value_out = param.get_value<T>();
       return true;
     }
@@ -59,7 +60,7 @@ public:
    * @param value_out The value of the parameter, will only be changed if the parameter is found.
    * @return - true if a parameter defined by the user is found.
    */
-  bool get(const std::string & name, int & value_out)
+  bool get(const std::string& name, int& value_out)
   {
     return get_template<int>(name, value_out, rclcpp::PARAMETER_INTEGER);
   }
@@ -70,7 +71,7 @@ public:
    * @param value_out The value of the parameter, will only be changed if the parameter is found.
    * @return - true if a parameter defined by the user is found.
    */
-  bool get(const std::string & name, double & value_out)
+  bool get(const std::string& name, double& value_out)
   {
     return get_template<double>(name, value_out, rclcpp::PARAMETER_DOUBLE);
   }
@@ -81,7 +82,7 @@ public:
    * @param value_out The value of the parameter, will only be changed if the parameter is found.
    * @return - true if a parameter defined by the user is found.
    */
-  bool get(const std::string & name, std::string & value_out)
+  bool get(const std::string& name, std::string& value_out)
   {
     return get_template<std::string>(name, value_out, rclcpp::PARAMETER_STRING);
   }
@@ -92,7 +93,7 @@ public:
    * @param value_out The value of the parameter, will only be changed if the parameter is found.
    * @return - true if a parameter defined by the user is found.
    */
-  bool get(const std::string & name, bool & value_out)
+  bool get(const std::string& name, bool& value_out)
   {
     return get_template<bool>(name, value_out, rclcpp::PARAMETER_BOOL);
   }
@@ -103,7 +104,7 @@ public:
    * @param value_out The value of the parameter, will only be changed if the parameter is found.
    * @return - true if a parameter defined by the user is found.
    */
-  bool get(const std::string & name, std::vector<double> & value_out)
+  bool get(const std::string& name, std::vector<double>& value_out)
   {
     return get_template(name, value_out, rclcpp::PARAMETER_DOUBLE_ARRAY);
   }
@@ -114,7 +115,7 @@ public:
    * @param value_out The value of the parameter, will only be changed if the parameter is found.
    * @return - true if a parameter defined by the user is found.
    */
-  bool get(const std::string & name, std::vector<std::string> & value_out)
+  bool get(const std::string& name, std::vector<std::string>& value_out)
   {
     return get_template<std::vector<std::string>>(name, value_out, rclcpp::PARAMETER_STRING_ARRAY);
   }
