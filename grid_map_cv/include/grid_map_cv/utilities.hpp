@@ -33,25 +33,22 @@ public:
    * Retrives parameter value when defined by user.
    * @param name The name of the parameter to read.
    * @param value_out The value of the parameter, will only be changed if the parameter is found.
-   * @param param_type The excpected type of the parameter.
    * @return - true if a parameter defined by the user is found.
    */
   template <typename T>
-  bool get_template(const std::string& name, T& value_out, rclcpp::ParameterType param_type)
+  bool get_template(const std::string& name, T& value_out)
   {
     rclcpp::Parameter param;
-
-    params_interface_->get_parameter(param_prefix_ + name, param);
-
-    if (param.get_type() != param_type)
+    try
+    {
+      params_interface_->get_parameter(name, param);
+      value_out = param.get_value<T>();
+    }
+    catch (const rclcpp::exceptions::InvalidParameterTypeException& /*e*/)
     {
       return false;
     }
-    else
-    {
-      value_out = param.get_value<T>();
-      return true;
-    }
+    return true;
   }
 
   /*!
@@ -62,7 +59,8 @@ public:
    */
   bool get(const std::string& name, int& value_out)
   {
-    return get_template<int>(name, value_out, rclcpp::PARAMETER_INTEGER);
+    params_interface_->declare_parameter(param_prefix_ + name, rclcpp::PARAMETER_INTEGER);
+    return get_template<int>(param_prefix_ + name, value_out);
   }
 
   /*!
@@ -73,7 +71,8 @@ public:
    */
   bool get(const std::string& name, double& value_out)
   {
-    return get_template<double>(name, value_out, rclcpp::PARAMETER_DOUBLE);
+    params_interface_->declare_parameter(param_prefix_ + name, rclcpp::PARAMETER_DOUBLE);
+    return get_template<double>(param_prefix_ + name, value_out);
   }
 
   /*!
@@ -84,7 +83,8 @@ public:
    */
   bool get(const std::string& name, std::string& value_out)
   {
-    return get_template<std::string>(name, value_out, rclcpp::PARAMETER_STRING);
+    params_interface_->declare_parameter(param_prefix_ + name, rclcpp::PARAMETER_STRING);
+    return get_template<std::string>(param_prefix_ + name, value_out);
   }
 
   /*!
@@ -95,7 +95,8 @@ public:
    */
   bool get(const std::string& name, bool& value_out)
   {
-    return get_template<bool>(name, value_out, rclcpp::PARAMETER_BOOL);
+    params_interface_->declare_parameter(param_prefix_ + name, rclcpp::PARAMETER_BOOL);
+    return get_template<bool>(param_prefix_ + name, value_out);
   }
 
   /*!
@@ -106,7 +107,8 @@ public:
    */
   bool get(const std::string& name, std::vector<double>& value_out)
   {
-    return get_template(name, value_out, rclcpp::PARAMETER_DOUBLE_ARRAY);
+    params_interface_->declare_parameter(param_prefix_ + name, rclcpp::PARAMETER_DOUBLE_ARRAY);
+    return get_template<std::vector<double>>(param_prefix_ + name, value_out);
   }
 
   /*!
@@ -117,7 +119,8 @@ public:
    */
   bool get(const std::string& name, std::vector<std::string>& value_out)
   {
-    return get_template<std::vector<std::string>>(name, value_out, rclcpp::PARAMETER_STRING_ARRAY);
+    params_interface_->declare_parameter(param_prefix_ + name, rclcpp::PARAMETER_STRING_ARRAY);
+    return get_template<std::vector<std::string>>(param_prefix_ + name, value_out);
   }
 
 private:
