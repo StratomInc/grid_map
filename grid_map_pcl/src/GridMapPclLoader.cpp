@@ -13,6 +13,7 @@
 #include <vector>
 #include <algorithm>
 
+#include <pcl/common/io.h>
 #ifdef GRID_MAP_PCL_OPENMP_FOUND
 #include <omp.h>
 #endif
